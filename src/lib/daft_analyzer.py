@@ -75,6 +75,50 @@ def analyze_property_description(property_data):
         
     return property_data
 
+def analyze_listings(properties_list, user_keywords_str):
+    """
+    Analyzes a list of fetched property data.
+    Applies predefined analysis tags using analyze_property_description.
+    Applies user-defined keyword matching.
+    """
+    if not properties_list:
+        return []
+
+    analyzed_properties = []
+    
+    custom_keywords_list = []
+    if user_keywords_str and isinstance(user_keywords_str, str):
+        custom_keywords_list = [kw.strip().lower() for kw in user_keywords_str.split(',') if kw.strip()]
+
+    for prop_data in properties_list:
+        # Apply standard analysis (this function modifies prop_data by adding 'analysis_tags')
+        analyzed_prop = analyze_property_description(prop_data.copy()) # Use .copy()
+
+        # Apply user-defined keywords
+        if custom_keywords_list:
+            text_to_search = (analyzed_prop.get("title", "").lower() + " " + 
+                              analyzed_prop.get("description", "").lower())
+            
+            user_match_found = False
+            for user_kw in custom_keywords_list:
+                if re.search(r'\b' + re.escape(user_kw) + r'\b', text_to_search): # Use regex word boundaries
+                    user_match_found = True
+                    break 
+            
+            if user_match_found:
+                if "Tag: User Keyword Match" not in analyzed_prop["analysis_tags"]:
+                    analyzed_prop["analysis_tags"].append("Tag: User Keyword Match")
+                # Remove "Tag: Standard Listing" if a more specific user tag is added
+                if "Tag: Standard Listing" in analyzed_prop["analysis_tags"] and len(analyzed_prop["analysis_tags"]) > 1:
+                    try:
+                        analyzed_prop["analysis_tags"].remove("Tag: Standard Listing")
+                    except ValueError:
+                        pass # Should be fine
+
+        analyzed_properties.append(analyzed_prop)
+        
+    return analyzed_properties
+
 def construct_search_url(filters):
     """Constructs a Daft.ie search URL based on the provided filters."""
     location = filters.get("location", "ireland")
@@ -181,7 +225,7 @@ def scrape_property_details(property_url):
         print(f"An unexpected error occurred while scraping {property_url}: {e}")
         return None
 
-def search_daft_properties(filters):
+def fetch_daft_listings(filters):
     """Searches Daft.ie based on filters and scrapes results."""
     search_url = construct_search_url(filters)
     print(f"Constructed search URL: {search_url}")
@@ -282,7 +326,7 @@ if __name__ == '__main__':
         "maxPrice": "500000",
         "max_pages": 1 # Limit to 1 page of results for this test
     }
-    multi_results = search_daft_properties(test_filters_multi)
+    multi_results = fetch_daft_listings(test_filters_multi)
     print(f"\nFound and analyzed {len(multi_results)} properties matching filters (max {test_filters_multi['max_pages']} page(s)).")
     if multi_results:
         print("--- Multi-Property Results (Analyzed) Sample ---")
@@ -299,7 +343,7 @@ if __name__ == '__main__':
         "keywords": "fixer upper",
         "max_pages": 1
     }
-    fixer_results = search_daft_properties(test_filters_fixer)
+    fixer_results = fetch_daft_listings(test_filters_fixer)
     print(f"\nFound and analyzed {len(fixer_results)} 'fixer upper' properties in {test_filters_fixer['location']} (max {test_filters_fixer['max_pages']} page(s)).")
     if fixer_results:
         print("--- Fixer-Upper Results Sample ---")

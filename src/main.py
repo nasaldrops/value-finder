@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__))) # DON'T CHANGE THIS !!!
 
 from flask import Flask, request, jsonify, render_template
-from src.lib.daft_analyzer import fetch_daft_listings, analyze_listings # Import the new functions
+from src.lib.daft_analyzer import fetch_daft_listings, analyze_listings
 
 app = Flask(__name__, static_folder='static', template_folder='static')
 
