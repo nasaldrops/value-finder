@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Finder - Irish Property Market</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Property Value Finder</h1>
+        <p>Discover hidden gems in the Irish property market.</p>
+    </header>
+
+    <main>
+        <section id="search-form-section">
+            <h2>Search Criteria</h2>
+            <form id="property-search-form">
+                <div class="form-group">
+                    <label for="email">Email for Notifications:</label>
+                    <input type="email" id="email" name="email" placeholder="your.email@example.com">
+                </div>
+
+                <h3>Property Filters</h3>
+                <div class="form-group">
+                    <label for="location">Location (e.g., Dublin, Cork County):</label>
+                    <input type="text" id="location" name="location" placeholder="Any">
+                </div>
+
+                <div class="form-group">
+                    <label for="propertyType">Property Type:</label>
+                    <select id="propertyType" name="propertyType">
+                        <option value="any">Any</option>
+                        <option value="house">House</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="site">Site/Land</option>
+                    </select>
+                </div>
+
+                <div class="form-group price-range">
+                    <div>
+                        <label for="minPrice">Min Price (&euro;):</label>
+                        <input type="number" id="minPrice" name="minPrice" placeholder="e.g., 50000">
+                    </div>
+                    <div>
+                        <label for="maxPrice">Max Price (&euro;):</label>
+                        <input type="number" id="maxPrice" name="maxPrice" placeholder="e.g., 300000">
+                    </div>
+                </div>
+
+                <div class="form-group bed-range">
+                     <div>
+                        <label for="minBeds">Min Beds:</label>
+                        <input type="number" id="minBeds" name="minBeds" min="0" placeholder="Any">
+                    </div>
+                    <div>
+                        <label for="maxBeds">Max Beds:</label>
+                        <input type="number" id="maxBeds" name="maxBeds" min="0" placeholder="Any">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="keywords">Keywords (e.g., fixer-upper, auction, garden):</label>
+                    <input type="text" id="keywords" name="keywords" placeholder="Separate with commas">
+                </div>
+
+                <button type="submit" id="analyzeButton">Analyze Properties</button>
+            </form>
+        </section>
+
+        <section id="results-section">
+            <h2>Analysis Results</h2>
+            <div id="results-content">
+                <p>Click "Analyze Properties" to start the search. Results will appear here.</p>
+                <!-- Results will be dynamically inserted here by JavaScript later -->
+            </div>
+            <div id="loading-indicator" style="display: none;">
+                <p>Analyzing... Please wait.</p>
+                <!-- Add a spinner or animation here if desired -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Value Finder</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
